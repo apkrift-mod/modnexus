@@ -1,0 +1,6 @@
+{
+  "name": "ModNexus",
+  "description": "Safe and trustworthy premium modded games hub featuring Zooba, Geometry Dash, and more.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
