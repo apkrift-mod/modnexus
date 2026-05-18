@@ -47,64 +47,66 @@ export default function DownloadModal({ game, onClose }: DownloadModalProps) {
   if (!game) return null;
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 overflow-y-auto">
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
-        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+        className="fixed inset-0 bg-black/80 backdrop-blur-sm"
       />
       
       <motion.div
         initial={{ scale: 0.9, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.9, opacity: 0, y: 20 }}
-        className="relative w-full max-w-2xl bg-slate-900 border border-white/10 rounded-3xl overflow-hidden shadow-2xl"
+        className="relative w-full max-w-2xl bg-slate-900 border border-white/10 rounded-3xl overflow-hidden shadow-2xl my-auto"
       >
         <button 
           onClick={onClose}
-          className="absolute top-6 right-6 p-2 hover:bg-white/5 rounded-full z-10 text-slate-500 hover:text-white transition-colors"
+          className="absolute top-4 right-4 p-2 hover:bg-white/5 rounded-full z-20 text-slate-500 hover:text-white transition-colors"
         >
           <X className="w-5 h-5" />
         </button>
 
         <div className="grid md:grid-cols-2">
-          {/* Left Column: Game Info */}
-          <div className="p-8 border-b md:border-b-0 md:border-r border-white/5">
-            <div className={`w-full aspect-[4/3] bg-gradient-to-br ${game.imageColor} rounded-2xl mb-6 flex items-center justify-center shadow-2xl shadow-black/50 overflow-hidden border border-white/10`}>
+          {/* Left Column: Game Info - Smaller for mobile */}
+          <div className="p-6 md:p-8 border-b md:border-b-0 md:border-r border-white/5 bg-slate-950/40">
+            <div className={`w-full aspect-[4/3] bg-slate-950 rounded-3xl mb-6 flex items-center justify-center shadow-2xl shadow-black/50 overflow-hidden border border-white/10 relative`}>
+                <div className={`absolute inset-0 bg-gradient-to-br ${game.imageColor} opacity-20`} />
                 {game.imageUrl ? (
                     <img 
                       src={game.imageUrl} 
                       alt={game.name} 
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover relative z-10"
                       referrerPolicy="no-referrer"
                     />
                 ) : (
-                    <span className="text-6xl font-black text-white select-none tracking-tighter">{game.name[0]}</span>
+                    <span className="text-6xl font-black text-white select-none tracking-tighter relative z-10">{game.name[0]}</span>
                 )}
             </div>
             
-            <h2 className="text-2xl font-bold text-white mb-2">{game.name}</h2>
-            <div className="flex flex-wrap gap-2 mb-6">
-                <span className="bg-slate-800 border border-white/5 rounded-full px-3 py-1 text-[10px] font-bold text-slate-400">v{game.version}</span>
-                <span className="bg-slate-800 border border-white/5 rounded-full px-3 py-1 text-[10px] font-bold text-slate-400">{game.size}</span>
-                <span className="bg-emerald-500/10 border border-emerald-500/20 rounded-full px-3 py-1 text-[10px] font-bold text-emerald-400 uppercase">Secure</span>
-            </div>
+            <div className="text-center md:text-left">
+              <h2 className="text-xl md:text-2xl font-bold text-white mb-2">{game.name}</h2>
+              <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-4">
+                  <span className="bg-slate-800 border border-white/5 rounded-full px-3 py-1 text-[9px] font-bold text-slate-400">v{game.version}</span>
+                  <span className="bg-slate-800 border border-white/5 rounded-full px-3 py-1 text-[9px] font-bold text-slate-400 uppercase">Secure</span>
+              </div>
 
-            <div className="space-y-3">
-                <h4 className="text-xs font-bold text-indigo-400 uppercase tracking-widest">Mod Features</h4>
-                {game.modFeatures.map((feature, i) => (
-                    <div key={i} className="flex items-center gap-2 text-sm text-slate-300">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                        <span>{feature}</span>
-                    </div>
-                ))}
+              <div className="space-y-2 text-left bg-black/20 p-4 rounded-xl border border-white/5">
+                  <h4 className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-1">Mod Features</h4>
+                  {game.modFeatures.slice(0, 3).map((feature, i) => (
+                      <div key={i} className="flex items-center gap-2 text-xs text-slate-300">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+                          <span className="line-clamp-1">{feature}</span>
+                      </div>
+                  ))}
+              </div>
             </div>
           </div>
 
           {/* Right Column: Logic */}
-          <div className="p-8 flex flex-col items-center justify-center min-h-[400px] bg-slate-950/30">
+          <div className="p-6 md:p-8 flex flex-col items-center justify-center min-h-[300px] md:min-h-[400px] bg-slate-950/30">
             <AnimatePresence mode="wait">
               {step === 'initial' && (
                 <motion.div 

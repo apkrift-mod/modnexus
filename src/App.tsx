@@ -153,17 +153,14 @@ export default function App() {
                         </div>
                     </div>
                     <div className="relative">
-                        <div className="aspect-[16/10] sm:aspect-square bg-gradient-to-br from-indigo-600/20 to-transparent rounded-3xl border border-white/10 p-6 md:p-8 flex flex-col justify-end overflow-hidden">
-                            <div className="absolute top-0 right-0 p-8 opacity-10">
-                                <Shield className="w-48 h-48 md:w-64 md:h-64" />
-                            </div>
-                            
-                            <div className="flex items-center gap-4 bg-black/40 backdrop-blur-md border border-white/10 p-4 rounded-2xl relative">
-                                <Lock className="w-8 h-8 text-indigo-400 shrink-0" />
-                                <div>
-                                    <h5 className="text-xs font-bold text-white">END-TO-END VERIFICATION</h5>
-                                    <p className="text-[10px] text-white/40 uppercase tracking-tighter">SECURE.MODNEXUS.INFRASTRUCURE</p>
+                        <div className="aspect-[16/10] sm:aspect-square bg-gradient-to-br from-indigo-600/20 to-transparent rounded-3xl border border-white/10 p-6 md:p-8 flex items-center justify-center overflow-hidden">
+                            <Shield className="w-48 h-48 md:w-64 md:h-64 opacity-20 absolute" />
+                            <div className="relative z-10 text-center">
+                                <div className="w-16 h-16 bg-emerald-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-emerald-500/20 shadow-lg shadow-emerald-500/10">
+                                    <Shield className="w-8 h-8 text-emerald-500" />
                                 </div>
+                                <h4 className="text-xl font-black text-white uppercase tracking-tighter">Secure Downloader</h4>
+                                <p className="text-xs text-slate-400 uppercase tracking-widest mt-1">Verified Infrastructure</p>
                             </div>
                         </div>
                     </div>
