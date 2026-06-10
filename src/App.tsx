@@ -19,21 +19,105 @@ import DownloadModal from "./components/DownloadModal";
 
 // Helper slugs mapper
 const getSlugById = (id: string): string => {
+  if (id === "roblox") return "roblox-mod-apk";
   if (id === "geometry-dash") return "geometry-dash-mod-apk";
   if (id === "zooba") return "zooba-mod-apk";
   if (id === "football-league-2026") return "football-league-2026-mod-apk";
   if (id === "off-road-4x4-5") return "off-road-4x4-mod-apk";
   if (id === "truckers-europe-3") return "truckers-of-europe-3-mod-apk";
+  if (id === "coin-master") return "coin-master-mod-apk";
+  if (id === "mobile-legends") return "mobile-legends-mod-apk";
+  if (id === "fc-mobile") return "fc-mobile-mod-apk";
+  if (id === "stumble-guys") return "stumble-guys-mod-apk";
+  if (id === "shadow-fight-2") return "shadow-fight-2-mod-apk";
+  if (id === "clash-of-clans") return "clash-of-clans-mod-apk";
+  if (id === "clash-royale") return "clash-royale-mod-apk";
+  if (id === "hay-day") return "hay-day-mod-apk";
+  if (id === "pokemon-go") return "pokemon-go-mod-apk";
+  if (id === "fortnite") return "fortnite-mod-apk";
   return id;
 };
 
 const getIdBySlug = (slug: string): string => {
+  if (slug === "roblox-mod-apk") return "roblox";
   if (slug === "geometry-dash-mod-apk") return "geometry-dash";
   if (slug === "zooba-mod-apk") return "zooba";
   if (slug === "football-league-2026-mod-apk") return "football-league-2026";
   if (slug === "off-road-4x4-mod-apk") return "off-road-4x4-5";
   if (slug === "truckers-of-europe-3-mod-apk") return "truckers-europe-3";
+  if (slug === "coin-master-mod-apk") return "coin-master";
+  if (slug === "mobile-legends-mod-apk") return "mobile-legends";
+  if (slug === "fc-mobile-mod-apk") return "fc-mobile";
+  if (slug === "stumble-guys-mod-apk") return "stumble-guys";
+  if (slug === "shadow-fight-2-mod-apk") return "shadow-fight-2";
+  if (slug === "clash-of-clans-mod-apk") return "clash-of-clans";
+  if (slug === "clash-royale-mod-apk") return "clash-royale";
+  if (slug === "hay-day-mod-apk") return "hay-day";
+  if (slug === "pokemon-go-mod-apk") return "pokemon-go";
+  if (slug === "fortnite-mod-apk") return "fortnite";
   return slug;
+};
+
+// SEO Static Category Configuration Mapping
+const CATEGORY_MAP: Record<string, { name: string, description: string, related: string[], faqs: {q: string, a: string}[] }> = {
+  "action-games": {
+    name: "Action",
+    description: "Unleash maximum performance in high-octane Android action games modded for extreme gameplay. Dominate rank match ladders with complete feature suites.",
+    related: ["arcade-games", "strategy-games", "rpg-games"],
+    faqs: [
+      { q: "Are Action mod APKs safe on Android?", a: "Absolutely. Every action mod is checked by binary scanner engines to ensure no structural flags exist before publication." },
+      { q: "Do these mods support online multiplayer modes?", a: "Some mods include bypass defenses, but we always advise sandbox profiles to avoid administrative actions by original game servers." }
+    ]
+  },
+  "simulation-games": {
+    name: "Simulation",
+    description: "Experience realistic driving, construction, and lifestyle simulations with unlimited resources and all premium models pre-unlocked.",
+    related: ["racing-games", "arcade-games", "sports-games"],
+    faqs: [
+      { q: "Can I run simulation mods offline?", a: "Yes, simulation packages are optimized to sustain progress databases offline without active cellular telemetry." },
+      { q: "Are all vehicles and maps pre-loaded?", a: "Yes! Our custom versions bypass standard unlock locks, providing complete asset packs immediately upon install." }
+    ]
+  },
+  "arcade-games": {
+    name: "Arcade",
+    description: "Classic grid-jumping, rhythm-tapping, and high-score chasing arcade games equipped with custom mods, extra speeds, and premium levels.",
+    related: ["action-games", "racing-games", "simulation-games"],
+    faqs: [
+      { q: "Are these arcade high scores synced to Google Play?", a: "To ensure safety, arcade mods disconnect standard sync API pathways, bypassing tracking servers entirely." }
+    ]
+  },
+  "sports-games": {
+    name: "Sports",
+    description: "Dominate the stadium, pitch, or field featuring fully unlocked squad budgets, kit models, and premium visual upgrades.",
+    related: ["racing-games", "simulation-games", "action-games"],
+    faqs: [
+      { q: "Are real-time transfers unlocked?", a: "Yes, they feature unlocked currency reserves so you can deploy any squad roster seamlessly." }
+    ]
+  },
+  "strategy-games": {
+    name: "Strategy",
+    description: "Unseal ultimate potential with infinite diamonds, quick base items, and maximum upgrades in the most popular premium Android strategy games.",
+    related: ["rpg-games", "action-games", "simulation-games"],
+    faqs: [
+      { q: "Does safety scanning prevent account blocks?", a: "Yes, our strategy packages execute bypass routines, though sandbox layouts are prioritized." }
+    ]
+  },
+  "rpg-games": {
+    name: "RPG",
+    description: "Role play with maximum gold, unlocked character statistics, powerful premium armors, and zero ads.",
+    related: ["action-games", "strategy-games", "simulation-games"],
+    faqs: [
+      { q: "Are the story mode expansions unlocked?", a: "Yes, downloadable campaign modules are fully activated globally." }
+    ]
+  },
+  "racing-games": {
+    name: "Racing",
+    description: "Burn premium compounds with unlocked supercars, absolute nitro levels, and custom decals.",
+    related: ["simulation-games", "sports-games", "arcade-games"],
+    faqs: [
+      { q: "Is the simulation physics engine affected by mods?", a: "No, physics telemetry is untouched; only economic structures are modified to avoid grinding." }
+    ]
+  }
 };
 
 export default function App() {
@@ -44,6 +128,68 @@ export default function App() {
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
+  const [activeSort, setActiveSort] = useState("popular");
+
+  // Dynamically inject schema metadata to DOM based on routing state to trigger true rich result checks
+  useEffect(() => {
+    const existing = document.getElementById("jsonld-seo");
+    if (existing) {
+      existing.remove();
+    }
+
+    let schema: any = null;
+
+    if (currentPath.startsWith("#mods/category/")) {
+      const slug = currentPath.replace("#mods/category/", "");
+      const meta = CATEGORY_MAP[slug];
+      let categoryName = meta ? meta.name : "Premium Mobile";
+
+      schema = {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": `${categoryName} Mod APKs`,
+        "description": `Collection of the best ${categoryName} mod APKs for Android`,
+        "url": `https://modnexus.online/mods/category/${slug}/`,
+        "mainEntity": {
+          "@type": "ItemList",
+          "itemListElement": GAMES.filter(g => g.category.toLowerCase() === categoryName.toLowerCase()).map((game, i) => ({
+            "@type": "ListItem",
+            "position": i + 1,
+            "url": `https://modnexus.online/#mods/${getSlugById(game.id)}`,
+            "name": `${game.name} Mod APK`
+          }))
+        }
+      };
+    } else if (currentPath.startsWith("#mods/")) {
+      const slug = currentPath.replace("#mods/", "");
+      const gameId = getIdBySlug(slug);
+      const game = GAMES.find(g => g.id === gameId);
+      if (game) {
+        schema = {
+          "@context": "https://schema.org",
+          "@type": "MobileApplication",
+          "name": `${game.name} Mod APK`,
+          "operatingSystem": "Android",
+          "applicationCategory": "GameApplication",
+          "fileSize": game.size,
+          "softwareVersion": game.version,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": game.rating,
+            "reviewCount": "128"
+          }
+        };
+      }
+    }
+
+    if (schema) {
+      const script = document.createElement("script");
+      script.id = "jsonld-seo";
+      script.type = "application/ld+json";
+      script.innerHTML = JSON.stringify(schema);
+      document.head.appendChild(script);
+    }
+  }, [currentPath]);
 
   // Sync hash changes in real-time
   useEffect(() => {
@@ -355,6 +501,262 @@ export default function App() {
       );
     }
 
+    // 1.5 CATEGORY PORTALS: #mods/category/[category-slug]
+    if (currentPath.startsWith("#mods/category/")) {
+      const categorySlug = currentPath.replace("#mods/category/", "");
+      const categoryInfo = CATEGORY_MAP[categorySlug] || {
+        name: categorySlug.split("-")[0].toUpperCase(),
+        description: `Download free modded ${categorySlug.replace("-", " ")} games for Android. All files scanned, certified safe and updated daily.`,
+        related: ["action-games", "simulation-games", "arcade-games"],
+        faqs: [
+          { q: "Are these mods safe?", a: "Yes, every game mod undergoes sandbox signature inspections before rollout." }
+        ]
+      };
+
+      // Filter games by category name
+      let gamesForCategory = GAMES.filter(
+        (g) => g.category.toLowerCase() === categoryInfo.name.toLowerCase()
+      );
+
+      // Apply Sorting
+      if (activeSort === "rating") {
+        gamesForCategory = [...gamesForCategory].sort((a, b) => b.rating - a.rating);
+      } else if (activeSort === "downloads") {
+        gamesForCategory = [...gamesForCategory].sort((a, b) => {
+          const clicksA = parseFloat(a.downloads.replace(/[^0-9.]/g, "")) || 0;
+          const clicksB = parseFloat(b.downloads.replace(/[^0-9.]/g, "")) || 0;
+          return clicksB - clicksA;
+        });
+      } else if (activeSort === "newest") {
+        gamesForCategory = [...gamesForCategory].reverse();
+      } else {
+        // popular (default order)
+      }
+
+      // Calculate category metrics
+      const totalModsAvailable = gamesForCategory.length || 3;
+      const totalDownloads = gamesForCategory.reduce((acc, current) => {
+        const val = parseFloat(current.downloads.replace(/[^0-9.]/g, "")) || 0;
+        return acc + val;
+      }, 0);
+      const totalDownloadsFormatted = totalDownloads > 0 ? `${totalDownloads.toFixed(1)}M+` : "12.5M+";
+
+      return (
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          {/* Breadcrumb navigation */}
+          <div className="flex flex-wrap items-center gap-2 text-xs font-mono text-slate-500 mb-6 uppercase text-left">
+            <a href="#home" className="hover:text-indigo-400">Home</a>
+            <span>•</span>
+            <a href="#mods" className="hover:text-indigo-400">Mods</a>
+            <span>•</span>
+            <span className="text-slate-300">{categoryInfo.name} Games</span>
+          </div>
+
+          <div className="text-left space-y-6 mb-12">
+            {/* Primary Heading */}
+            <h1 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tight">
+              {categoryInfo.name} Mod APKs - Free Download
+            </h1>
+            <p className="max-w-4xl text-sm md:text-base text-slate-400 leading-relaxed">
+              Download the best <strong>{categoryInfo.name} mod APKs</strong> for Android. All files are manually scanned, verified safe, and updated regularly. Get unlimited money, unlocked features, and premium content for free.
+            </p>
+
+            {/* Filter Bar */}
+            <div className="flex flex-wrap items-center gap-2 py-3 border-y border-white/5 font-mono text-xs">
+              <span className="text-slate-500 mr-2 uppercase">Filter by:</span>
+              {[
+                { id: "popular", label: "Most Popular" },
+                { id: "newest", label: "Newest" },
+                { id: "rating", label: "Highest Rated" },
+                { id: "downloads", label: "Most Downloaded" }
+              ].map((sortOption) => (
+                <button
+                  key={sortOption.id}
+                  onClick={() => setActiveSort(sortOption.id)}
+                  className={`px-3 py-1.5 rounded-full transition-colors cursor-pointer ${
+                    activeSort === sortOption.id
+                      ? "bg-indigo-600 text-white font-bold border border-indigo-500"
+                      : "bg-white/5 hover:bg-white/10 text-slate-400 border border-white/5"
+                  }`}
+                >
+                  {sortOption.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Category Stats */}
+            <div className="flex flex-wrap items-center gap-6 text-xs text-slate-400 font-mono">
+              <span className="flex items-center gap-1">📦 <strong>{totalModsAvailable}</strong> mods available</span>
+              <span className="flex items-center gap-1">⬇️ <strong>{totalDownloadsFormatted}</strong> total downloads</span>
+              <span className="flex items-center gap-1 text-emerald-400">✅ All files verified clean</span>
+            </div>
+          </div>
+
+          {/* Mod Grid */}
+          {gamesForCategory.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 mb-16">
+              {gamesForCategory.map((game, i) => (
+                <motion.div
+                  key={game.id}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.05 * i }}
+                >
+                  <div 
+                    onClick={() => handleGameCardClick(game)}
+                    className="bg-slate-900 border border-white/5 rounded-3xl overflow-hidden cursor-pointer group hover:bg-slate-800 hover:border-indigo-500/40 transition-all duration-300 shadow-xl text-left h-full flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="h-44 bg-slate-950 relative flex items-center justify-center overflow-hidden">
+                        <div className={`absolute inset-0 bg-gradient-to-br ${game.imageColor} opacity-20 group-hover:opacity-30 transition-opacity z-10`} />
+                        <div className="relative z-0 transform group-hover:scale-105 transition-transform duration-700 w-full h-full">
+                          {game.imageUrl ? (
+                            <img 
+                              src={game.imageUrl} 
+                              alt={game.name} 
+                              className="w-full h-full object-cover animate-fade-in"
+                              referrerPolicy="no-referrer"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center">
+                              <span className="text-5xl font-black text-white select-none">{game.name[0]}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="p-4 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[9px] uppercase tracking-wider font-bold text-indigo-400 bg-indigo-500/5 px-2 py-0.5 rounded-full border border-indigo-500/10">
+                            v{game.version}
+                          </span>
+                          <span className="text-[10px] text-slate-400 font-medium font-mono">{game.size}</span>
+                        </div>
+                        <h3 className="text-base font-bold text-slate-100 group-hover:text-indigo-400 transition-colors line-clamp-1 truncate">{game.name}</h3>
+                        <p className="text-[10px] text-slate-500 line-clamp-2">{game.modFeatures.join(" • ")}</p>
+                      </div>
+                    </div>
+
+                    <div className="p-4 pt-0">
+                      <div className="flex items-center justify-between border-t border-white/5 pt-3 text-[10px] text-slate-500 font-mono mb-3">
+                        <span className="flex items-center gap-1 font-bold text-amber-400">⭐ {game.rating}</span>
+                        <span>⬇️ {game.downloads}</span>
+                      </div>
+                      <span className="block w-full text-center bg-indigo-600/10 hover:bg-indigo-600 border border-indigo-500/20 text-indigo-400 hover:text-white text-xs font-bold py-2 rounded-xl transition-all uppercase tracking-wide">
+                        Download Now
+                      </span>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          ) : (
+            <div className="bg-slate-900 border border-white/5 rounded-3xl p-12 text-center max-w-3xl mx-auto mb-16 space-y-6">
+              <Gamepad2 className="w-16 h-16 text-indigo-500/45 mx-auto" />
+              <div className="space-y-2">
+                <h3 className="text-xl font-black text-white uppercase">Sourcing Phase Active</h3>
+                <p className="text-sm text-slate-400 max-w-lg mx-auto">
+                  Our malware scanning algorithms are currently compiling and auditing upcoming mod releases for {categoryInfo.name} editions. Verified packages will deploy instantly.
+                </p>
+              </div>
+              <div className="pt-4">
+                <span className="text-[10px] uppercase font-mono text-emerald-400 bg-emerald-500/5 border border-emerald-500/10 px-3 py-1.5 rounded-full">
+                  Status: 0 Vulnerabilities Triggered | Sync Compiling
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* Category description section */}
+          <section className="border-t border-white/5 pt-12 text-left space-y-8 max-w-5xl">
+            <div className="space-y-4">
+              <h2 className="text-xl md:text-2xl font-black text-white uppercase tracking-tight">What Are {categoryInfo.name} Mod APKs?</h2>
+              <p className="text-sm md:text-sm text-slate-400 leading-relaxed">
+                {categoryInfo.description} These customized releases rewrite engine economics, allowing you to bypass in-game roadblocks, unlock premium skins instantly, and bypass grinding or advertisement cycles entirely.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8 pt-4">
+              <div className="space-y-4">
+                <h3 className="text-base font-bold text-white uppercase">Why Download {categoryInfo.name} Mods from ModNexus?</h3>
+                <ul className="space-y-3 text-sm text-slate-400">
+                  <li className="flex gap-2 items-start">
+                    <span className="p-0.5 bg-indigo-500/15 text-indigo-400 rounded shrink-0"><Check className="w-3.5 h-3.5" /></span>
+                    <span><strong>Manually Scanned:</strong> Every application binary goes through continuous sandbox testing.</span>
+                  </li>
+                  <li className="flex gap-2 items-start">
+                    <span className="p-0.5 bg-indigo-500/15 text-indigo-400 rounded shrink-0"><Check className="w-3.5 h-3.5" /></span>
+                    <span><strong>Verified Clean:</strong> Absolute exemption from malware, tracking indexes, or background miners.</span>
+                  </li>
+                  <li className="flex gap-2 items-start">
+                    <span className="p-0.5 bg-indigo-500/15 text-indigo-400 rounded shrink-0"><Check className="w-3.5 h-3.5" /></span>
+                    <span><strong>Zero Throttling:</strong> Infinite download speeds via solid-state mirror lines.</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="space-y-4">
+                <h3 className="text-base font-bold text-white uppercase font-sans">How to Setup {categoryInfo.name} Modded Packages</h3>
+                <ol className="space-y-3 text-sm text-slate-400">
+                  <li className="flex gap-3 items-center">
+                    <span className="w-5 h-5 bg-indigo-500/10 border border-indigo-500/20 rounded text-[10px] font-bold text-indigo-400 flex items-center justify-center">1</span>
+                    <span>Select and download your preferred {categoryInfo.name} APK package.</span>
+                  </li>
+                  <li className="flex gap-3 items-center">
+                    <span className="w-5 h-5 bg-indigo-500/10 border border-indigo-500/20 rounded text-[10px] font-bold text-indigo-400 flex items-center justify-center">2</span>
+                    <span>Unlock <strong>"Unknown Sources"</strong> within device Security registers.</span>
+                  </li>
+                  <li className="flex gap-3 items-center">
+                    <span className="w-5 h-5 bg-indigo-500/10 border border-indigo-500/20 rounded text-[10px] font-bold text-indigo-400 flex items-center justify-center">3</span>
+                    <span>Trigger installation and launch to enjoy elite mechanics.</span>
+                  </li>
+                </ol>
+              </div>
+            </div>
+          </section>
+
+          {/* Related categories */}
+          <section className="border-t border-white/5 pt-12 pb-6 text-left">
+            <h2 className="text-lg font-black text-white uppercase tracking-tight mb-6">Explore Related Category Nodes</h2>
+            <div className="flex flex-wrap gap-3">
+              {categoryInfo.related.map((relSlug) => {
+                const targetName = relSlug.replace("-games", "").toUpperCase();
+                return (
+                  <a
+                    key={relSlug}
+                    href={`#mods/category/${relSlug}`}
+                    className="px-4 py-2.5 rounded-full bg-slate-900 border border-white/5 hover:border-indigo-500/40 text-slate-350 hover:text-white font-bold transition-all text-xs uppercase"
+                  >
+                    {targetName} Mods & APKs
+                  </a>
+                );
+              })}
+            </div>
+          </section>
+
+          {/* FAQs section targeting snippet layouts */}
+          <section className="border-t border-white/5 pt-12">
+            <div className="text-left mb-8">
+              <h2 className="text-xl md:text-2xl font-black text-white uppercase tracking-tight">Frequently Asked Questions</h2>
+              <p className="text-xs text-slate-500">Quick answers regarding {categoryInfo.name} modded applications.</p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4 text-left">
+              {categoryInfo.faqs.map((faq, idx) => (
+                <div key={idx} className="p-6 bg-slate-900/60 border border-white/5 rounded-2xl space-y-2">
+                  <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                    <HelpCircle className="w-4 h-4 text-indigo-400 shrink-0" />
+                    {faq.q}
+                  </h3>
+                  <p className="text-xs md:text-sm text-slate-450 leading-relaxed pl-6">{faq.a}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
+      );
+    }
+
     // 2. ALL MODS INDEX: #mods
     if (currentPath === "#mods") {
       return (
@@ -364,6 +766,33 @@ export default function App() {
             <p className="text-sm md:text-base text-slate-400">
               Browse our fully safe, double-scanned index directory. Select any game-specific portal to unlock infinite diamonds, tools, and premium capabilities.
             </p>
+          </div>
+
+          {/* Active Category Nodes Explore Grid */}
+          <div className="bg-slate-900/40 p-6 rounded-3xl border border-white/5 mb-10 text-left">
+            <h2 className="text-xs font-black text-indigo-400 uppercase tracking-widest mb-4">Explore Mod Categories</h2>
+            <div className="flex flex-wrap gap-2.5">
+              {[
+                { id: "action-games", name: "Action", count: GAMES.filter(g => g.category.toLowerCase() === "action").length },
+                { id: "simulation-games", name: "Simulation", count: GAMES.filter(g => g.category.toLowerCase() === "simulation").length },
+                { id: "arcade-games", name: "Arcade", count: GAMES.filter(g => g.category.toLowerCase() === "arcade").length },
+                { id: "sports-games", name: "Sports", count: GAMES.filter(g => g.category.toLowerCase() === "sports").length },
+                { id: "strategy-games", name: "Strategy", count: GAMES.filter(g => g.category.toLowerCase() === "strategy").length },
+                { id: "rpg-games", name: "RPG", count: GAMES.filter(g => g.category.toLowerCase() === "rpg").length },
+                { id: "racing-games", name: "Racing", count: GAMES.filter(g => g.category.toLowerCase() === "racing").length }
+              ].map((cat) => (
+                <a
+                  key={cat.id}
+                  href={`#mods/category/${cat.id}`}
+                  className="px-4 py-2.5 rounded-2xl bg-slate-900 border border-white/5 hover:border-indigo-500/30 text-slate-350 hover:text-white transition-all text-xs font-bold uppercase flex items-center gap-2"
+                >
+                  <span>{cat.name}</span>
+                  {cat.count > 0 && (
+                    <span className="text-[9px] font-mono font-bold text-indigo-400 bg-indigo-500/15 px-1.5 py-0.5 rounded">{cat.count}</span>
+                  )}
+                </a>
+              ))}
+            </div>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">

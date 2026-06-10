@@ -4,6 +4,43 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MODNEXUS - Premium Mod APK Hub</title>
+    <script>
+      // Gracefully prevent read-only fetch getter errors in iframe environments
+      (function() {
+        try {
+          var originalFetch = window.fetch;
+          if (originalFetch) {
+            var currentFetch = originalFetch;
+            
+            // Redefine window.fetch if configurable
+            try {
+              Object.defineProperty(window, 'fetch', {
+                get: function() { return currentFetch; },
+                set: function(val) { currentFetch = val; },
+                configurable: true,
+                enumerable: true
+              });
+            } catch (err) {
+              window.fetch = originalFetch;
+            }
+
+            // Redefine globalThis.fetch if configurable
+            if (typeof globalThis !== 'undefined') {
+              try {
+                Object.defineProperty(globalThis, 'fetch', {
+                  get: function() { return currentFetch; },
+                  set: function(val) { currentFetch = val; },
+                  configurable: true,
+                  enumerable: true
+                });
+              } catch (err) {}
+            }
+          }
+        } catch (e) {
+          console.warn("Fetch override defense initialized with warnings:", e);
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
